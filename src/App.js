@@ -1,26 +1,99 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { Component } from 'react';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      items: [],
+      isloaded: false,
+      search: '',
+      query: '',
+    }
+  }
+
+
+  componentDidMount() {
+    this.performSearch();
+  }
+
+  performSearch = () => {
+    
+    fetch(`https://api.edamam.com/search?q=${this.state.query}&app_id=${process.env.REACT_APP_API_ID}&app_key=${process.env.REACT_APP_API_KEY}`)
+      .then(res => res.json())
+      .then(json => {
+        this.setState({
+          isloaded: true,
+          items: json,
+        })
+      });
+  }
+
+  componentDidUpdate(prevP, prevS, SS) {
+    if(this.state.query !== prevS.query) {
+      this.setState({query: this.state.query});
+      this.performSearch(this.state.query);
+    }
+  }
+
+
+  render() {
+    var {isloaded, items} = this.state;
+    
+    if(!isloaded) {
+      return (
+        <div className="loading" >
+          <i className="fas fa-spinner fa-5x"></i>
+          <h2>Loading...</h2>
+        </div>
+      )
+    }
+    else {
+
+      const updateSearch = e => { //passes the input target value into the search state
+        this.setState({search: e.target.value});
+      }
+
+      const getSearch = e => {
+        e.preventDefault();
+        this.setState({query: this.state.search});
+      }
+
+      return (
+        <div className="App">
+          <h1>Search for Recipes</h1>
+          <form onSubmit={getSearch} className="search-form">
+            <input className="search-bar" type="text" value={this.state.search} onChange={updateSearch} autoFocus/>
+            <button className="search-button" type="submit">Search</button>
+          </form>
+          <div className="recipes">
+            {items.hits.map(item => (
+              <>
+                <div className="recipe-box">
+                  <div>
+                    <h2>{item.recipe.label}</h2>
+                    <img src={item.recipe.image} alt=""></img>
+                  </div>
+                  <div>
+                    <h4 className="ingredients">Ingredients:</h4>
+                    <ul className="ingredients">{item.recipe.ingredientLines.map(ingredient => (
+                      <li>{ingredient}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <br/>
+                </div>
+              </>
+            ))};
+          </div>
+
+        </div>
+      );
+    }
+
+    
+  }
+  
 }
 
 export default App;
