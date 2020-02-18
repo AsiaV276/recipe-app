@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import './App.css';
 
+require('dotenv').config();
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -61,30 +63,35 @@ class App extends Component {
 
       return (
         <div className="App">
-          <h1>Search for Recipes</h1>
+          <h1>Recipes</h1>
           <form onSubmit={getSearch} className="search-form">
-            <input className="search-bar" type="text" value={this.state.search} onChange={updateSearch} autoFocus/>
+            <input className="search-bar" type="text" value={this.state.search} onChange={updateSearch} placeholder="Search for recipes..." autoFocus/>
             <button className="search-button" type="submit">Search</button>
           </form>
           <div className="recipes">
             {items.hits.map(item => (
               <>
+              {console.log(item.recipe)
+              }
                 <div className="recipe-box">
                   <div>
                     <h2>{item.recipe.label}</h2>
-                    <img src={item.recipe.image} alt=""></img>
+                    <img src={item.recipe.image} alt="" className="recipe-image"></img>
                   </div>
                   <div>
+                    <p>{item.recipe.dietLabels[0]}</p>
+                    <p>Calories: {item.recipe.calories.toFixed(0)}</p>
                     <h4 className="ingredients">Ingredients:</h4>
                     <ul className="ingredients">{item.recipe.ingredientLines.map(ingredient => (
                       <li>{ingredient}</li>
                       ))}
                     </ul>
                   </div>
+                    <p>Cook time: {item.recipe.totalTime} minutes</p>
                   <br/>
                 </div>
               </>
-            ))};
+            ))}
           </div>
 
         </div>
