@@ -1,5 +1,4 @@
 body {
-  background: rgb(253,33,33);
   background: linear-gradient(132deg, rgba(253,33,33,1) 0%, rgba(255,181,60,1) 100%);
   height: 100vh;
 }
@@ -33,8 +32,14 @@ body {
   border-style: none;
   background-color:#2f0000;
   color: white;
-  width: 10vw;
+  width: 20vw;
   cursor: pointer;
+}
+
+@media screen and (min-width: 450px) {
+  .search-button {
+    width: 20vw;
+  }
 }
 
 .search-button:hover {
@@ -44,6 +49,8 @@ body {
 .search-button:active {
   background-color: cadetblue;
 }
+
+
 
 
 
