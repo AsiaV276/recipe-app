@@ -70,7 +70,7 @@ body {
 
 .recipe-box {
   display: grid;
-  grid-template-columns: auto 300px;
+  grid-template-columns: auto auto;
   gap: 20px;
   /*border: silver 2px solid;*/
   background-color: whitesmoke;
